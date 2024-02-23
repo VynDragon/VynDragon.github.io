@@ -14,11 +14,19 @@
 			<a href="#Flashing_BouffaloLabs">Flashing and BouffaloLabs</a><br>
 			<a href="#Clocks">Clocks</a><br>
 			<a href="#OpenOCD">OpenOCD</a><br>
+			<a href="#Toolchains">Toolchains</a><br>
 			<a href="#Boards">Boards and Modules</a><br>
 			<a href="#Alternatives">Alternatives</a><br>
 		</h2>
 	<div>
-		<hr style="border-top:1px solid orange;">
+	<hr style="border-top:1px solid orange;">
+	<div>
+	<a href="https://bouffalolab.com/">Who? What?</a><br>
+	<a href="https://dev.bouffalolab.com/home">DevZone</a><br>
+	<a href="https://github.com/bouffalolab/bouffalo_sdk">SDK</a><br>
+	<a href="https://github.com/bouffalolab/bl_docs">Datasheets and Reference Manuals</a><br>
+	</div>
+	<hr style="border-top:1px solid orange;">
 	<div>
 		<h1 id="Flash_BouffaloLabs">BouffaloLabs Flash structure</h1>
 			<img src="img/flash.png" /><br>
@@ -131,6 +139,14 @@ adapter speed 1000<br>
 		</p>
 		<p>
 		<a href="https://github.com/bouffalolab/bouffalo_sdk/tree/master/tools/gdbinit">Grab a gdb configuration file for your device</a>, you might need to modify the port used, then run GDB with it: <code>gdb -x "bl602.init"</code>
+		</p>
+	</div>
+	<div>
+		<h1 id="Toolchains">Toolchains</h1>
+		<p>
+		<a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">Zephyr toolchains</a> for RISC-V should work for everything afaik, just give it to the SDK.<br>
+		<a href="https://github.com/bouffalolab/toolchain_gcc_t-head_linux">The official toolchain</a> should be fine otherwise, I believe what made it special has been mainlined a while ago.<br>
+		
 		</p>
 	</div>
 	<div>
