@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Vdragon's Notes</title>
+	<meta charset="UTF-8">
+    <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+	<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+	<div>
+		<h2>
+			<a href="#Flash_BouffaloLabs">BouffaloLabs Flash structure</a><br>
+			<a href="#Flashing">Flashing Tools</a><br>
+			<a href="#Flashing_BouffaloLabs">Flashing and BouffaloLabs</a><br>
+			<a href="#Clocks">Clocks</a><br>
+			<a href="#OpenOCD">OpenOCD</a><br>
+		</h2>
+	<div>
+		<hr style="border-top:1px solid orange;">
+	<div>
+		<h1 id="Flash_BouffaloLabs">BouffaloLabs Flash structure</h1>
+			<img src="img/flash.png" /><br>
+			<div>
+				<h3>The Boot Header</h2>
+				<p> At the start of the Flash, Bouffalolabs microcontrollers have a bootheader.<br>
+				This bootheader provides configuration for the initialization of the MCU: Flash settings, boot address...<br>
+				It's also accessed via the bootrom stored within ROM (128 kB at 0x21000000 on BL602) which will use it to perform checks (CRC of the data that has been flashed mostly).<br>
+				Its structure and options are detailed in the python code of the flash tools (bflb-mcu-tool), as one option.<br>
+				There is one option to disable CRC (CRC ignore bit set to 1) that appears to cause it to fail to boot and go waiting in the bootrom on the BL602 i tested it on.
+				</p>
+			</div>
+			<div>
+				<h3>Organization Methods</h2>
+				There are 2 ways to organize the flash in BL mcus:
+				<p>
+				The first one is the BFLB way, using a boot2 binary file provided with the SDK, a partition table is stored at a defined address, the bootheader is set to run the code of boot2, <br>
+				which will proceed with checks and loading of various data. <br>
+				This method is used if you use the SDK, which will generate the configuration for flashing.
+				</p>
+				<p>
+				The second one is the traditional way, the bootheader is set to jump to a specific address in the flash (0x2000 by default), and running the code from there.<br>
+				<code>&lt;bflb_mcu_tool&gt; --chipname=bl602 --port=/dev/ttyUSB0 --baudrate=115200 --firmware="helloworld_bl602.bin"</code><br>
+				If you use bflb_mcu_tool, the bootheader will be parametred correctly without intervention and there is no additional verifications(beside the ones from the bootrom, configured via the bootheader) enabled.
+				</p>
+			</div>
+		
+	</div>
+	<div>
+		<h1 id="Flashing">Flashing Tools</h1>
+		<p>
+		<b>Do not use the flash tool provided in the SDK!</b><br>
+		</p>
+		<p>
+			Up to Date BLFlashCube and accompanying tools (command line versions), can be obtained from here: <a href="https://dev.bouffalolab.com/download">https://dev.bouffalolab.com/download</a><br>
+			But the <b>best tool</b>, is the open source of version of it: <a href="https://pypi.org/project/bflb-mcu-tool/">https://pypi.org/project/bflb-mcu-tool/</a><br>
+			Also installable via pypi and a Archlinux AUR package, be careful with the dependencies which you might need to fix manually, but it otherwise works fine.<br>
+			<code>pip install bflb-mcu-tool</code><br>
+			I have found several other available options either dont do the operations correctly (blflash) or do not work at all with BL602, I recommend not using anything but the open bflb-mcu-tool or the up to date official tool.
+		</p>
+	</div>
+	<div>
+		<h1 id="Flashing_BouffaloLabs">Flashing and BouffaloLabs</h1>
+		<p>
+			Flashing a custom-built binary via UART is as simple as <br>
+			<code>&lt;bflb_mcu_tool&gt; --chipname=bl602 --port=/dev/ttyUSB0 --firmware="helloworld_bl602.bin"</code><br>
+			But what happens is the following:<br>
+			1. Initialization, core is running bootrom and reading bootheader<br>
+			2. Bootrom detects flash mode is enabled because we are pull the relevant pin (GPIO8 on BL602) high, otherwise, continue initialization and jump to the defined address<br>
+			3. Handshake with PC<br>
+			4. Sideload flash tool in ram<br>
+			5. Send some infos back(Flash Jedec ID), the PC will use those infos to build the boot header for the image to flash<br>
+			6. Use Sideloaded tools to actually do the flashing<br>
+			(7. Continue waiting for commands, this is not supported by most flash tools, you will be required to re-enter flash mode via buttons)<br>
+		</p>
+	</div>
+	<div>
+		<h1 id="Clocks">Clocks</h1>
+		<img src="img/clocks_bl602.jpg" />
+		<p>
+		BFLB SoCs have adjustable clocks. <br>
+		Most Relevant clocks are BCLK (peripheral clock), and HCLK/FCLK (CPU core clock).<br>
+		the RISC-V architecture offers a cycle counter (mcycle) but also a CPU time counter (mtime). <b>mtime frequency is a fixed 1MHz on BL602</b>, while mcycle frequency is the current core frequency.<br>
+		mtime is sometimes wrongfully used as a cycle counter (for example, in zephyr), and so the CPU frequency and cycle configuration numbers will not match reality.<br>
+		It is possible to observe clock settings error by looking at the frequency of mtime, as misconfigured clocks will result in mtime not matching the right frequency.<br>
+		</p>
+		<p>
+		On BL602, the clock settings are set in the clk_cfg0 sections of memory (0x40000000) and following addresses, see the <a href="https://github.com/bouffalolab/bl_docs/blob/main/BL602_RM/en/BL602_BL604_RM_1.2_en.pdf">reference manual</a>.<br> 
+		To obtain the clock settings, it is possible to read those addresses, the bootheader may be configured to set a frequency at startup which may be different from defaults.<br>
+		Additional informations (for example, the crystal frequency) are also accessible, examples for clocks are present in the SDK's driver files for this.
+		</p>
+	</div>
+	<div>
+		<h1 id="OpenOCD">OpenOCD</h1>
+		<p>
+		Firstly, ensure you have a configuration file that is right for your adapter, here is one for a FT232H:<br>
+		<code>
+		# tested on FT232HQ generic cheap purple adapter<br>
+# TCK:  D0<br>
+# TDI:  D1<br>
+# TDO:  D2<br>
+# TMS:  D3<br>
+# TRST: D4<br>
+# SRST: D5<br>
+<br>
+<br>
+adapter driver ftdi<br>
+ftdi vid_pid 0x0403 0x6014<br>
+<br>
+ftdi tdo_sample_edge falling<br>
+<br>
+ftdi channel 0<br>
+<br>
+ftdi layout_init 0x0078 0x017b<br>
+<br>
+ftdi layout_signal nTRST -ndata 0x0010 -noe 0x0040<br>
+ftdi layout_signal nSRST -ndata 0x0020 -noe 0x0040<br>
+<br>
+adapter speed 1000<br>
+</code>
+		Then ensure the connections to the device are right (the Datasheet or google will answer the pinout for a device).<br>
+		</p>
+		<p>
+		Secondly, ensure your device configuration file is right, <a href="https://github.com/bouffalolab/bouffalo_sdk/tree/master/tools/openocd/target">there are some in the SDK</a>.
+		</p>
+		<p>
+		Proceed with running openOCD, with the configuration files just mentionned:
+		<code>openocd -f "ft232h.cfg" -f "bl602.cfg"</code><br>
+		This should connect to your device and open a local socket for GDB to connect to.
+		</p>
+		<p>
+		<a href="https://github.com/bouffalolab/bouffalo_sdk/tree/master/tools/gdbinit">Grab a gdb configuration file for your device</a>, you might need to modify the port used, then run GDB with it: <code>gdb -x "bl602.init"</code>
+		</p>
+	</div>
+</body>
+</html> 

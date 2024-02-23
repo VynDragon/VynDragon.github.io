@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Vdragon's Notes</title>
+	<meta charset="UTF-8">
+    <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+	<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+	<div>
+		<h2>
+			<a href="#Sections">Sections</a><br>
+			<a href="#DTS">DTS</a><br>
+		</h2>
+	<div>
+	<hr style="border-top:1px solid orange;">
+	<div>
+		<h1 id="Sections">Sections</h1>
+			<div>
+				arch - architecture stuffs like riscv initialization and linker config<br>
+				boards - boards definition files, stuffs specific to a single pcb<br>
+				cmake - cmake scripts<br>
+				doc - documentation<br>
+				drivers - device drivers, including SoC devices (timers, SPI, etc) and external device drivers.<br>
+				dts - common DTS files (SoC level, arch level) and bindings between dts names and driver names.<br>
+				include - repetition of the folder structure but for all hte headers that could fit in it, also DTS bindings headers.<br>
+				kernel - kernel<br>
+				lib - lib<br>
+				misc - nothing<br>
+				modules - external modules build, config, and additional files for external elements required to build zephyr (modules folder in workspace correspondant)<br>
+				samples - samples<br>
+				scripts - build generation scripts, west build, debug, etc scripts, runners, debuggers.<br>
+				share - share<br>
+				snippets - snippets<br>
+				soc - soc level files, sorted by arch then by vendor then by platform.<br>
+				submanifests - submanifests<br>
+				subsys - zephyr subsystems<br>
+				tests - tests to test specific features of zephyr, buildable like samples.<br>
+				west.yml - module definition file<br>
+				<p> </p>
+			</div>
+	</div>
+	<div>
+		<h1 id="DTS">DTS</h1>
+			<div>
+				<p>What is in the DTS is defined in the bindings, which define what matches what, based on what is reported by macros in the driver files<br>
+				There are some standard arguments but a lot are driver specific<br>
+				name {}; -> a group <br>
+				name1 : name0@address {}; -> a device<br>
+				<a href="https://elinux.org/Device_Tree_Usage">https://elinux.org/Device_Tree_Usage</a><br>
+				It is similar to linux<br>
+				</p>
+			</div>
+	</div>
+</body>
+</html> 

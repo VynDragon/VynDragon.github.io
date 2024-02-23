@@ -1,0 +1,13 @@
+html{
+    background-color: PapayaWhip;
+    font: 1rem "Noto Sans", sans-serif;
+    word-wrap:break-word;
+}
+a {
+  color: blue;
+  text-decoration: none; /* no underline */
+}
+
+code {
+  color: red;
+}
