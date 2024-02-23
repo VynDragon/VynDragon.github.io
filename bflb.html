@@ -14,6 +14,8 @@
 			<a href="#Flashing_BouffaloLabs">Flashing and BouffaloLabs</a><br>
 			<a href="#Clocks">Clocks</a><br>
 			<a href="#OpenOCD">OpenOCD</a><br>
+			<a href="#Boards">Boards and Modules</a><br>
+			<a href="#Alternatives">Alternatives</a><br>
 		</h2>
 	<div>
 		<hr style="border-top:1px solid orange;">
@@ -129,6 +131,84 @@ adapter speed 1000<br>
 		</p>
 		<p>
 		<a href="https://github.com/bouffalolab/bouffalo_sdk/tree/master/tools/gdbinit">Grab a gdb configuration file for your device</a>, you might need to modify the port used, then run GDB with it: <code>gdb -x "bl602.init"</code>
+		</p>
+	</div>
+	<div>
+		<h1 id="Boards">Boards And Modules</h1>
+		<p>
+			<h3>Ai-Thinker</h3>
+			<p>
+			Ai-Thinker is a reliable provider of microcontroller modules, and has a set of Bouffalolabs Modules. I would recommend their modules in general.<br>
+			</p>
+			<b>Each of those module series has a associated dev-board</b>
+			<p>
+			<b>Ai-WB2-* - BL602 Modules</b><br>
+			Ai-WB2-12F - 12F (most common ESP8266 format) BL602 module, fits in lots of things designed for ESP8266<br>
+			Ai-WB2-12F - 32S (most common ESP32 format) BL602 module, fits in lots of things designed for ESP32<br>
+			</p>
+			<p>
+			<b>Ai-M61-* BL618 Modules</b><br>
+			Available in ESP-01, 32S, 32SU (32S without antenna) formats<br>
+			</p>
+			<p>
+			<b>Ai-M62-* BL616 Modules</b><br>
+			Available in 12F, 32S, '13', and 'M2' formats<br>
+			</p>
+			<p>
+			<b>Rd-01 BL602 Module</b><br>
+			Weird module with S3KM111L on it<br>
+			</p>
+		</p>
+		<p>
+			<h3>Pine64</h3>
+			<p>
+			Pine64 is a maker of electronic products with strong interest in open source.<br>
+			</p>
+			<p>
+			<b>Pinenut - BL602 Modules</b><br>
+			12S (12F without the bottom-side pins) and ESP-01S format.<br>
+			</p>
+			<p>
+			<b>Pinecone - BL602 Evaluation Board</b><br>
+			USB C devboard that hosts a 12S module.<br>
+			</p>
+			<p>
+			<b>Ox64 - BL808 Board</b><br>
+			Uses SDCard, Available with 2MB or 16 MB Flash, pi pico format<br>
+			</p>
+		</p>
+		<p>
+			<h3>Sipeed</h3>
+			<p>
+			Sipeed is a maker of electronic products also leaning toward open source and RISC-V things.<br>
+			</p>
+			<p>
+			<b>M0 Sense - BL702 Board</b><br>
+			Simple board.<br>
+			</p>
+			<p>
+			<b>M0S - BL616 Stamp Module</b><br>
+			Tiny module for BL616<br>
+			<b>M0S - BL616 Stamp Board</b><br>
+			Simple board to mount the stamp, built like a RV Debugger<br>
+			</p>
+			<p>
+			<b>RV Debugger - BL702 JTAG adapter / Secret Devboard</b><br>
+			A small and cheap UART + JTAG adapter, also a BL702 devboard in times of need<br>
+			</p>
+			<p>
+			<b>M1S - BL808 Module</b><br>
+			A castellated module for BL808<br>
+			<b>M1S Dock - BL808 Board</b><br>
+			Uses a microSD,comes with camera connector and other options, a nice shell is available.<br>
+			</p>
+		</p>
+	</div>
+	<div>
+		<h1 id="Alternatives">Alternatives</h1>
+		<p>
+		<b>TG7100C</b> is a alternative BL602 package, documentation for it is not available in english, but is available on baidu <a href="http://aepdsir.oss-cn-shanghai.aliyuncs.com/hanqian/ossDOC/TG7100C/TG7100C数据手册.pdf">Datasheet</a><br>
+		It is available in the Ai-Thinker TG-12F module.<br>
 		</p>
 	</div>
 </body>
