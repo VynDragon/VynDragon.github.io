@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Vdragon's Notes</title>
+	<meta charset="UTF-8">
+    <link href='https://fonts.googleapis.com/css?family=Noto Sans'
+rel='stylesheet'>
+	<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+	<div>
+		<h2>
+			<a href="#Boot_Process">Boot Process</a><br>
+		</h2>
+	<div>
+	<hr style="border-top:1px solid orange;">
+	<div>
+	<a href="https://milkv.io/duo">Who? What?</a><br>
+	<a
+href="https://github.com/milkv-duo/duo-buildroot-sdk/tree/develop">BuildRoot/SDK
+</a>
+<br>
+	<a href="https://github.com/milkv-duo/duo-files">Datasheets and Reference
+Manuals</a><br>
+	</div>
+	<hr style="border-top:1px solid orange;">
+	<div>
+		<h1 id="Boot_Process">Boot Process</h1>
+			<img src="img/duo_sdcard.png" /><br>
+			from <a
+href="https://github.com/milkv-duo/duo-buildroot-sdk/blob/develop/device/milkv-
+duo/genimage.cfg">https://github.com/milkv-duo/duo-buildroot-sdk/blob/develop/
+device/milkv -duo/genimage.cfg</a>
+			<div>
+				<p><b>fip.bin</b> is placed into the first partition, it
+contains FSBL (first stage bootloader), U-Boot, openSBI, and the compiled code
+for the second core (FreeRTOS), as well as set all the relevant options for the
+bootrom.
+				</p>
+                <p><b>boot.sd</b> is the kernel and the flattened devicetree
+that U-Boot will use to launch the system.
+			</div>
+	</div>
+</body>
+</html>
