@@ -11,6 +11,7 @@ rel='stylesheet'>
 	<div>
 		<h2>
 			<a href="#Boot_Process">Boot Process</a><br>
+			<a href="#8021">8051</a><br>
 		</h2>
 	<div>
 	<hr style="border-top:1px solid orange;">
@@ -39,6 +40,73 @@ bootrom.
 				</p>
                 <p><b>boot.sd</b> is the kernel and the flattened devicetree
 that U-Boot will use to launch the system.
+			</div>
+	</div>
+	<div>
+		<h1 id="8051">8051</h1>
+			<div>
+			Compiler (SDCC) with nano: <a href="data/SDCC.tar.gz">Here</a><br>
+			Files related to Compiler Builds: <a href="data/SDCC_files.tar.gz">Here</a><br>
+			</div>
+			<div>
+				<h3>Instructions</h3>
+				<p>
+					First, build SDCC (8051 compiler) for C906 to compile on Duo.<br>
+<br>
+I am using a custom compiled Toolchain (from https://github.com/riscv-collab/riscv-gnu-toolchain) BECAUSE NOTHING PREBUILT F*CKING WORKS RIGHT OMFG HOW HARD IS IT TO BUILD A WORKING GCC+GLIBC AND
+NOT FAIL (yes i had obscure nonsensical errors building sdcc before I rebuilt the toolchain myself, it fixed the issue, i lost like 6 hours on this, do not use the official archlinux packaged
+toolchain for riscv64 or any other options like that)<br>
+For milk-v's toolchain mtune and march will be different (and it might not work at all for this, havent tried), look into the buildroot for examples of them.<br>
+<br>
+But we have a couple dependencies that need to be built for riscv64:<br>
+<br>
+for zlib:<br>
+<code>
+mkdir build<br>
+cd build<br>
+cmake -DCMAKE_INSTALL_PREFIX=$PWD/out -DCMAKE_TOOLCHAIN_FILE=/home/vdragon/dev/DUO/toolchain_c906.cmake ..<br>
+make -j16<br>
+make install<br>
+</code>
+<br>
+for boost:<br>
+<br>
+<code>
+# Build and setup boost.build (ONLY boost.build) for your system (google)<br>
+# then:<br>
+mkdir build<br>
+cd build<br>
+./build.sh<br>
+</code>
+<br>
+And finally SDCC, which we build statically just to be sure:<br>
+<br>
+<code>
+mkdir build<br>
+cd build<br>
+# build libs for sdcc devices, we need sdcc for that and it does it by itself, so build for host<br>
+../configure --disable-pic14-port --disable-pic16-port<br>
+make -j16<br>
+make DESTDIR=$PWD/out install<br>
+rm -r $PWD/out/usr/local/bin $PWD/out/usr/local/libexec<br>
+make clean<br>
+# and then delete everything but out and our scripts becasue make has the dumbs and will try to use the x86_64 files<br>
+#build for riscv64 immediatly after<br>
+configure.sh<br>
+build.sh<br>
+make DESTDIR=$PWD/out install<br>
+</code>
+Because i changed toolchain midway, my out folder is a mess, but the idea is to end up with bin, libexec, and share (the one from the host compilation) folders<br>
+<img src="img/Screenshot_20240228_173114.png" /><br>
+Grab those files, put them in your system image in the appropriate folders (copying the 3 folders in /usr/local is a good option)<br>
+
+Check SDCC runs (if you didnt put it in /usr/local you might want to add that to PATH):<br>
+<img src="img/Screenshot_20240228_173350.png" style="width:80%"/><br>
+I also grabbed a example to test functionality:<br>
+<img src="img/Screenshot_20240228_181126.png" /><br>
+
+
+				</p>
 			</div>
 	</div>
 </body>
