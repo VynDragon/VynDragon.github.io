@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Vdragon's Notes</title>
+	<meta charset="UTF-8">
+    <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+	<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+	<div>
+		<h2>
+			<a href="#WCHLinkJTAG">How to make WCH Link work as regular JTAG</a><br>
+			<a href="#CH9143">CH9143 (and CH9141) Critical Elements for successful use in BLE mode</a><br>
+		</h2>
+	<div>
+	<hr style="border-top:1px solid orange;">
+	<div>
+	<a href="https://www.wch-ic.com/">Who? What?</a><br>
+	</div>
+	<hr style="border-top:1px solid orange;">
+	<div>
+		<h1 id="WCHLinkJTAG">How to make WCH Link work as regular JTAG</h1>
+			<div>
+			<a href="https://www.youtube.com/watch?v=fUrfaR3VOHA">Video</a><br>
+			</div>
+			<div>
+				<p>
+				This is a little documented fact, but it is possible to use WCH Link devices as regular
+				JTAG adapters:
+				</p>
+				<p>
+				The link device must be set to ARM mode
+				(the mode we are using is referenced as ARM-JTAG WinUSB in the manual)
+				</p>
+				<p>
+				And the type of device the link will be emulating is 'cmsis-dap'.
+				</p>
+			</div>
+	</div>
+	<div>
+		<h1 id="CH9143">CH9143 (CH9140, CH9141) Critical Elements for successful use in BLE mode</h1>
+			<div>
+				<p>
+				<a href="https://www.wch-ic.com/downloads/CH9143DS1_PDF.html">CH9143 Datasheet</a><br>
+				<a href="https://www.wch-ic.com/downloads/CH9141DS1_PDF.html">CH9141 Datasheet</a><br>
+				<a href="https://www.wch-ic.com/downloads/CH9140DS1_PDF.html">CH9140 Datasheet</a><br>
+				</p>
+				<p>
+				Hidden in the <a href="https://www.wch-ic.com/downloads/CH9141DS1_PDF.html">CH9141 Datasheet</a>, is a critical set of information about the BLE interface:<br>
+					<p>
+						0xFFF0 is the BLE UART service, it functions similarly to NRF BLE UART.
+					</p>
+					<p>
+						0xFFF1 Property is RX
+					</p>
+					<p>
+						0xFFF2 Property is TX
+					</p>
+					<p>
+						0xFFF3 Property is Configuration, of which the format is described only in this datasheet:<br>
+						Sending 0600090000C2010008010006 sets the UART up for micropython settings.<br>
+						<img src="img/ch9141_uart_data.png" style="width:30%" /><br>
+						<img src="img/Screenshot_20240930-202231.png" style="width:25%" /><br>
+					</p>
+				</p>
+			</div>
+	</div>
+
+</body>
+</html> 
