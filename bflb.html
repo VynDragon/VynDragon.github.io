@@ -18,6 +18,7 @@
 			<a href="#Boards">Boards and Modules</a><br>
 			<a href="#Alternatives">Alternatives</a><br>
 			<a href="#Bootrom">BootRoms</a><br>
+			<a href="#JTAGBL61x">JTAG on 16-19 BL61x</a><br>
 		</h2>
 	<div>
 	<hr style="border-top:1px solid orange;">
@@ -235,6 +236,40 @@ adapter speed 1000<br>
 		</p>
 		<p>
 		<a href="data/bootrom_bl702.bin">BL702 Bootrom</a><br>
+		</p>
+	</div>
+		<div>
+		<h1 id="JTAGBL61x">JTAG on 16-19 BL61x</h1>
+		<p> On some BL61x (Ai-Thinker M61), the normal JTAG 0123 mapping doesnt work. It is possible to switch the mapping to 16 17 18 19 by burning a efuse.
+		</p>
+		<h2> The procedure is as follow:</h2>
+		<p>
+		The simplest way to do this is using bouffalolab devcube, this will be explained, but the other tools can do it as well. <b>This has the potential of permanently bricking your device if done improperly.</b><br>
+		<br>
+		1. Make Efuse image and its mask, provided for convenience in there: <a href="data/efuse_bl61x.tar.gz">Efuses Files</a><br>
+		They are composed of 2 elements, the efuse bin, which sets the value (0x96 at 0x5D here), and efuse_mask bin, which sets the modification mask (we only want to modify a single bit, so we put 0x4 at 0x5D.<br>
+		<br>
+		2. Copy the 2 files to chips/bl616/efuse_bootheader/, overwrite if other files of same name are present.<br>
+		<br>
+		3. Open Devcube, enable advanced pages, and go to the 'Efuse' tab.<br>
+		<br>
+		4. Setup your settings on the right side and your device, do not click any buttons, especially program or create. Set AES Mode to None and verify no locks or keys are set.<br>
+		<br>
+		5. Press the Program button.<br>
+		<br>
+		6. Verify by resetting the device into flash mode, pressing the Read button, and opening the file efuse.bin next to devcube executable that 0x5D is now 0x96 instead of 0x92<br>
+		</p>
+		<br>
+		<p> Finally, it is possible JTAG will still not work depending on your bootrom version. If this is the case, you need to set in your program the AON control register enable to 0, as it is preventing using the pins.<br>
+		To do this, set bits mask 0xF00000 in HBN_PAD_CTRL_0 (0x38 + 0x2000f000) to zero, eg HBN_PAD_CTRL_0 = HBN_PAD_CTRL_0 & ~0xF00000;<br>
+		<br>
+		<code>
+		tmp = sys_read32(HBN_BASE + HBN_PAD_CTRL_0_OFFSET);<br>
+tmp &= ~HBN_REG_EN_AON_CTRL_GPIO_MSK;<br>
+sys_write32(tmp, HBN_BASE + HBN_PAD_CTRL_0_OFFSET);<br>
+		</code>
+		<br>
+		After this code has been executed, you should be able to connect to JTAG.
 		</p>
 	</div>
 </body>
